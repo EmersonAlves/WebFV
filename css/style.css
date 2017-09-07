@@ -1,0 +1,25 @@
+*{margin:0;padding:0px}
+body{
+	background-color: #ddd;
+}
+.subcontainer{	
+	background-color: #fff;
+}
+.active{
+	color: #f16c00 !important;
+}
+.btn{
+	background-color: #ef660f;
+}
+.btn:hover{
+	background-color: #d55f13
+}
+.btn:focus, .btn-large:focus, .btn-floating:focus {
+    background-color: #ef660f;
+}
+nav{
+	background-color: #f57c51;
+}
+nav .active{
+	color:#fff !important;
+}
