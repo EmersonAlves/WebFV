@@ -1,4 +1,4 @@
-<div class="row" style="margin-top: 2%">	
+<div class="row" style="margin-top: 2%;margin-bottom:0px;">	
 	<div class="col s2 m2 l2"></div>
 		<form action="#" class="col s8 m8 l8 subcontainer">
 			<div class="file-field input-field">
@@ -13,17 +13,15 @@
 			<div class="progress" id="progress" style="display: none">
 			    <div class="indeterminate"></div>
 			</div>
-			<table id="tabelaheader">
-			</table>
+			<label id="qtde"></label>
+			<div class="row">
+				<div class="col s5 m5 l5"></div>
+				<div class="col s2 m2 l2"><button class="btn" id="enviarDados" style="display:none">Enviar</button></div>
+				<div class="col s5 m5 l5"></div>
+			</div>
 		</form>
 	<div class="col s2 m2 l2"></div>
 	
-</div>
-<div class="row" style="max-height: 300px; overflow-y: scroll;color:#000">
-		<div class="col s2 m2 l2"></div>
-		<table class="col s8 m8 l8 subcontainer" id="tablebody">
-		</table>
-		<div class="col s2 m2 l2"></div>
 </div>
 <script type="text/javascript">
 	var dados;
@@ -36,21 +34,34 @@
 
     function onReaderLoad(event){
         dados = JSON.parse(event.target.result);
-        if(dados.usuarios != null){
-        	mostraTabela();
+        if(dados.dados != null){
+        	//mostraTabela();
+			document.getElementById("progress").style.display = "none";
+			document.getElementById("qtde").innerHTML = "Quantidade de Registros: "+dados.dados.length;
+			document.getElementById("enviarDados").style.display = "block";			
         }
     }
-    
-    function mostraTabela(){
-    	var tabelaheader = "<thead><tr><th>IdUsuario</th><th>Cliente</th></tr></thead>";
-    	var tabelabody = "<tbody style='max-height: 300px; overflow-y: scroll;'>";
-    	for(var i = 0; i < dados.usuarios.length; i++){
-    		tabelabody += "<tr><td>"+dados.usuarios[i].idusuario+"</td><td>"+dados.usuarios[i].idusuario+"</td></tr></tr>";
-    	}
-    	tabelabody += "</tbody>";
-    	document.getElementById("tabelaheader").innerHTML = tabelaheader;
-    	document.getElementById("tablebody").innerHTML = tabelabody;
-		document.getElementById("progress").style.display = "none";
+   
+	document.getElementById("enviarDados").addEventListener("click",function(){
 
-    }
+		document.getElementById("qtde").innerHTML = "Aguarde alguns minutos";
+		document.getElementById("enviarDados").style.display = "none";
+		document.getElementById("progress").style.display = "block";
+		request = $.ajax({
+		        url: "php/incluirDados.php",
+		        type: "post",
+		        data: {'ordem': JSON.stringify(dados)}
+			});
+			request.done(function (response, textStatus, jqXHR){
+				document.getElementById("progress").style.display = "none";
+				document.getElementById("qtde").innerHTML = "Finalizado : "+dados.dados.length+" registro atualizado no sistema ";
+				console.log(response);
+			});
+			request.fail(function (jqXHR, textStatus, errorThrown){
+			    console.error(
+			        "The following error occurred: "+
+			        textStatus, errorThrown
+		    );
+		});
+	});
 </script>
